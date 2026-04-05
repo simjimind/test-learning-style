@@ -1,0 +1,396 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.wrap{
+  min-height:520px;
+  background:linear-gradient(135deg,#fde8f0 0%,#e8f0fd 40%,#e8fdf0 100%);
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:2rem 1rem 2.5rem;
+  font-family:var(--font-sans);
+  position:relative;
+  overflow:hidden;
+}
+.wrap::before{
+  content:'';
+  position:absolute;
+  top:-60px;right:-60px;
+  width:200px;height:200px;
+  border-radius:50%;
+  background:rgba(255,200,220,0.25);
+}
+.wrap::after{
+  content:'';
+  position:absolute;
+  bottom:-40px;left:-40px;
+  width:160px;height:160px;
+  border-radius:50%;
+  background:rgba(200,220,255,0.25);
+}
+
+.top-bar{width:100%;max-width:500px;margin-bottom:1.5rem;position:relative;z-index:2;}
+.progress-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.prog-label{font-size:13px;color:#8a7fa0;font-weight:500;}
+.prog-num{font-size:13px;color:#8a7fa0;}
+.prog-track{height:6px;background:rgba(180,160,210,0.2);border-radius:10px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#f0a0c0,#a0b0f0);transition:width 0.5s cubic-bezier(.4,0,.2,1);}
+
+.card-stage{
+  width:100%;max-width:500px;
+  position:relative;
+  height:300px;
+  z-index:2;
+}
+
+.q-card{
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,0.82);
+  backdrop-filter:blur(12px);
+  border-radius:24px;
+  border:1.5px solid rgba(255,255,255,0.9);
+  box-shadow:0 8px 32px rgba(160,140,200,0.15);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:2rem 2rem 1.5rem;
+  text-align:center;
+  transition:transform 0.45s cubic-bezier(.4,0,.2,1), opacity 0.45s ease;
+}
+.q-card.hide-left{
+  transform:translateX(-110%) rotate(-8deg);
+  opacity:0;
+  pointer-events:none;
+}
+.q-card.hide-right{
+  transform:translateX(110%) rotate(8deg);
+  opacity:0;
+  pointer-events:none;
+}
+.q-card.slide-in{
+  animation:slideIn 0.45s cubic-bezier(.4,0,.2,1) forwards;
+}
+@keyframes slideIn{
+  from{transform:translateX(60px) scale(0.96);opacity:0;}
+  to{transform:translateX(0) scale(1);opacity:1;}
+}
+
+.card-num{
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:0.1em;
+  color:#c0a0d0;
+  margin-bottom:1rem;
+  text-transform:uppercase;
+}
+.card-type-dot{
+  display:inline-block;
+  width:8px;height:8px;
+  border-radius:50%;
+  margin-right:6px;
+  vertical-align:middle;
+}
+.card-text{
+  font-size:18px;
+  font-weight:500;
+  color:#4a3d60;
+  line-height:1.6;
+  margin-bottom:2rem;
+  word-break:keep-all;
+}
+
+.btn-row{display:flex;gap:16px;}
+.ans-btn{
+  width:100px;height:52px;
+  border-radius:16px;
+  border:2px solid transparent;
+  font-size:22px;
+  cursor:pointer;
+  transition:all 0.18s ease;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-sans);
+}
+.btn-o{
+  background:linear-gradient(135deg,#ffe0ec,#ffd0e8);
+  border-color:#f0a0c0;
+  color:#d05090;
+}
+.btn-o:hover{
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(240,160,192,0.4);
+}
+.btn-x{
+  background:linear-gradient(135deg,#e0e8ff,#d0dcff);
+  border-color:#a0b0f0;
+  color:#5070d0;
+}
+.btn-x:hover{
+  transform:scale(1.08);
+  box-shadow:0 6px 20px rgba(160,176,240,0.4);
+}
+
+.ghost-cards{position:absolute;inset:0;pointer-events:none;}
+.ghost{
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,0.45);
+  border-radius:24px;
+  border:1.5px solid rgba(255,255,255,0.7);
+}
+.ghost:nth-child(1){transform:translate(6px,6px) scale(0.97);z-index:-1;}
+.ghost:nth-child(2){transform:translate(12px,12px) scale(0.94);z-index:-2;opacity:0.6;}
+
+.hint{
+  margin-top:1.25rem;
+  font-size:13px;
+  color:#b0a0c0;
+  z-index:2;
+  text-align:center;
+}
+
+.result-wrap{
+  width:100%;max-width:500px;
+  z-index:2;
+  display:none;
+  animation:fadeUp 0.5s ease forwards;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.result-title{font-size:14px;color:#9080b0;text-align:center;margin-bottom:1.2rem;font-weight:500;}
+
+.winner-pill{
+  text-align:center;
+  background:rgba(255,255,255,0.85);
+  border-radius:20px;
+  padding:1.5rem;
+  margin-bottom:1.2rem;
+  border:2px solid;
+}
+.w-icon{font-size:44px;margin-bottom:8px;}
+.w-tag{font-size:12px;font-weight:600;letter-spacing:0.08em;margin-bottom:4px;}
+.w-name{font-size:28px;font-weight:600;margin-bottom:6px;}
+.w-score{font-size:14px;margin-bottom:12px;}
+.w-desc{font-size:14px;line-height:1.7;text-align:left;}
+
+.bars{display:flex;flex-direction:column;gap:10px;background:rgba(255,255,255,0.7);border-radius:16px;padding:1.2rem;margin-bottom:1rem;}
+.bar-row{display:grid;grid-template-columns:28px 1fr 36px;align-items:center;gap:10px;}
+.bar-key{font-size:13px;font-weight:600;text-align:center;}
+.bar-track{height:10px;background:rgba(180,160,210,0.2);border-radius:8px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:8px;transition:width 0.8s cubic-bezier(.4,0,.2,1);}
+.bar-val{font-size:13px;color:#8a7fa0;text-align:right;}
+
+.restart-btn{
+  width:100%;padding:13px;
+  border-radius:16px;
+  border:none;
+  background:linear-gradient(135deg,#f0d0e8,#d0dcf8);
+  color:#6050a0;
+  font-size:15px;
+  font-weight:500;
+  cursor:pointer;
+  font-family:var(--font-sans);
+  transition:opacity 0.15s;
+}
+.restart-btn:hover{opacity:0.85;}
+</style>
+
+<div class="wrap" id="mainWrap">
+
+  <div class="top-bar" id="topBar">
+    <div class="progress-row">
+      <span class="prog-label" id="progLabel">질문 1 / 52</span>
+      <span class="prog-num" id="progNum">0%</span>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="card-stage" id="cardStage">
+    <div class="ghost-cards"><div class="ghost"></div><div class="ghost"></div></div>
+    <div class="q-card" id="qCard">
+      <div class="card-num" id="cardNum"></div>
+      <div class="card-text" id="cardText"></div>
+      <div class="btn-row">
+        <button class="ans-btn btn-o" onclick="answer(1)">○</button>
+        <button class="ans-btn btn-x" onclick="answer(0)">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint" id="hintText">○ 해당함 &nbsp;·&nbsp; ✕ 해당 안 함</div>
+
+  <div class="result-wrap" id="resultWrap">
+    <div class="result-title" id="resultSub"></div>
+    <div class="winner-pill" id="winnerPill">
+      <div class="w-icon" id="wIcon"></div>
+      <div class="w-tag" id="wTag"></div>
+      <div class="w-name" id="wName"></div>
+      <div class="w-score" id="wScore"></div>
+      <div class="w-desc" id="wDesc"></div>
+    </div>
+    <div class="bars" id="barsDiv"></div>
+    <button class="restart-btn" onclick="restart()">다시 검사하기</button>
+  </div>
+
+</div>
+
+<script>
+const Qs=[
+"연극이나 역할놀이를 통해 학습하는 것을 좋아한다",
+"학교에서 하는 수업방식이 내게 맞는 것 같다",
+"사물이나 어떤 일에 대해서 따지기 좋아한다",
+"친구가 나에게 잘못했더라도 쉽게 용서해준다",
+"스스로 공부하는 분위기를 좋아한다",
+"수업시간에 공책정리를 꼼꼼히 한다",
+"친구들과 어울리기 보다 혼자서 생각하거나 공부하는 것이 더 좋다",
+"동화책을 읽을 때, 내가 주인공이 된다",
+"책으로 공부하는 것보다 체험학습이나 현장학습을 좋아한다",
+"공부할 때는 미리 계획을 세워서 하는 것이 좋다",
+"남들이 보기에 별로 중요해보이지 않는 것에도 깊이 파고든다",
+"감정표현이 풍부하다",
+"활동적인 특별활동이나 스포츠에 관심이 많다",
+"등교시간이나 학원 수업시간에 늦지 않는다",
+"한번 집중하면 옆에서 무슨 일이 일어나는지 잘 모른다",
+"이것저것 생각은 많으나 실제 행동으로 옮기는 것이 적다",
+"짧은 시간에 집중적으로 공부하는 것을 좋아한다",
+"토론수업을 통해 배우는 것보다 선생님이 직접 가르쳐 주는 수업이 더 좋다",
+"잘난 척하는 것처럼 보여서 오해받을 때가 있다",
+"칭찬 받거나 꾸지람을 들으면 기분이 쉽게 좋아지거나 나빠진다",
+"활동적이다",
+"공공질서를 잘 지킨다",
+"여러가지 다양한 것에 대해 아는 것이 많다",
+"친구 마음을 잘 이해한다",
+"새롭고 흥미진진한 일을 찾는다",
+"남을 잘 돕는다",
+"모든 것을 근거(증거)에 따라 설명하려 한다",
+"마음이 따뜻하고 성격이 좋다는 말을 자주 듣는다",
+"해야 할 일이 있으면 빨리 해 버린다",
+"책임감이 있다",
+"이것저것 꼼꼼히 따져본다",
+"슬픈 일을 보면 쉽게 눈물이 난다",
+"무슨 일이든 스스로 알아서 한다",
+"계획적이다",
+"이야기할 때 요점만 간단하게 말한다",
+"남에게 친절하고 배려를 잘한다",
+"용감하다",
+"미리미리 준비를 잘 하는 편이다",
+"생각을 많이 한다",
+"원칙이 중요하다고 느끼지만 나만의 생각과 느낌에 따라 생각하고 결정한다",
+"경쟁심이 강하다",
+"일을 차근차근 차례대로 한다",
+"나만의 생각과 느낌이 있지만 그래도 원칙에 따라 생각하고 결정한다",
+"작은 일에도 슬퍼하거나 감동한다",
+"어려움을 무릅쓰고라도 어떤 일을 하고자 한다",
+"나의 생활은 매일 똑같다",
+"좋은 점과 나쁜 점을 잘 찾아서 지적한다",
+"최고가 되거나 완전하기를 바란다",
+"모든 일에 적극적이고 열심히 한다",
+"규칙을 잘 지킨다",
+"다음에 무슨 일이 일어날지 잘 짐작한다",
+"마음이 넓은 편이다"
+];
+
+const TYPES=['A','B','C','D'];
+const TINFO={
+  A:{icon:'🔥',label:'A유형 · 불',name:'행동형',color:'#f0a0c0',border:'#f0c0d0',bg:'#fff0f5',tc:'#c04070',bar:'linear-gradient(90deg,#f0a0c0,#f080a8)',short:'적극적·도전적인 행동파',desc:'활동적이고 경쟁심이 강합니다. 직접 몸으로 경험하며 배우는 것을 좋아하고 빠른 결정과 추진력이 뛰어납니다. 새로운 일에 적극적으로 뛰어드는 리더형입니다.'},
+  B:{icon:'🌿',label:'B유형 · 땅',name:'규범형',color:'#90d0a0',border:'#b0e0b0',bg:'#f0fbf2',tc:'#307050',bar:'linear-gradient(90deg,#80d0a0,#50c080)',short:'계획적·책임감 있는 실천가',desc:'규칙과 질서를 중요하게 여기며 계획적으로 일을 처리합니다. 책임감이 강하고 체계적이며 꼼꼼하게 수행하는 것을 선호하는 든든한 존재입니다.'},
+  C:{icon:'✨',label:'C유형 · 바람',name:'탐구형',color:'#a090e0',border:'#c0b0f0',bg:'#f5f0ff',tc:'#5040a0',bar:'linear-gradient(90deg,#b0a0f0,#8070d8)',short:'논리적·탐구심 강한 사색가',desc:'분석적이고 논리적으로 사고하며 깊이 파고드는 것을 좋아합니다. 근거와 증거를 중시하고 다양한 정보를 수집해 스스로 이해하려는 성향이 강합니다.'},
+  D:{icon:'💧',label:'D유형 · 물',name:'이상형',color:'#80b8f0',border:'#a0d0f8',bg:'#f0f6ff',tc:'#2060a0',bar:'linear-gradient(90deg,#90c0f8,#60a0e8)',short:'감성적·공감 능력 뛰어난 몽상가',desc:'감정이 풍부하고 타인의 마음을 잘 이해합니다. 이상을 꿈꾸며 창의적인 상상력이 뛰어나고 따뜻한 마음으로 깊은 인간관계를 맺습니다.'}
+};
+
+const dotColors={A:'#f08090',B:'#70c080',C:'#9080d0',D:'#60a0e0'};
+
+let cur=0, scores={A:0,B:0,C:0,D:0}, busy=false;
+
+function typeAt(i){return TYPES[i%4];}
+
+function renderCard(){
+  const t=typeAt(cur);
+  const card=document.getElementById('qCard');
+  card.className='q-card';
+  document.getElementById('cardNum').innerHTML=
+    `<span class="card-type-dot" style="background:${dotColors[t]}"></span>${t}유형 &nbsp;·&nbsp; ${cur+1} / 52`;
+  document.getElementById('cardText').textContent=Qs[cur];
+  card.classList.add('slide-in');
+  updateProg();
+}
+
+function updateProg(){
+  const pct=Math.round(cur/52*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progLabel').textContent='질문 '+(cur+1)+' / 52';
+  document.getElementById('progNum').textContent=pct+'%';
+}
+
+function answer(val){
+  if(busy) return;
+  busy=true;
+  if(val===1) scores[typeAt(cur)]++;
+  const card=document.getElementById('qCard');
+  card.classList.remove('slide-in');
+  card.classList.add(val===1?'hide-left':'hide-right');
+  setTimeout(()=>{
+    cur++;
+    if(cur>=52){showResult();return;}
+    card.classList.remove('hide-left','hide-right');
+    renderCard();
+    busy=false;
+  },400);
+}
+
+function showResult(){
+  document.getElementById('topBar').style.display='none';
+  document.getElementById('cardStage').style.display='none';
+  document.getElementById('hintText').style.display='none';
+
+  const rw=document.getElementById('resultWrap');
+  rw.style.display='block';
+
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const [wt,ws]=sorted[0];
+  const wi=TINFO[wt];
+
+  document.getElementById('resultSub').textContent=
+    `○ 합계 — A:${scores.A} · B:${scores.B} · C:${scores.C} · D:${scores.D}`;
+
+  const pill=document.getElementById('winnerPill');
+  pill.style.background=wi.bg;
+  pill.style.borderColor=wi.border;
+  document.getElementById('wIcon').textContent=wi.icon;
+  document.getElementById('wTag').innerHTML=`<span style="color:${wi.tc}">${wi.label}</span>`;
+  document.getElementById('wName').innerHTML=`<span style="color:${wi.tc};font-size:30px;">${wi.name}</span>`;
+  document.getElementById('wScore').innerHTML=`<span style="color:${wi.tc}">○ ${ws}개 / 13개 · ${wi.short}</span>`;
+  document.getElementById('wDesc').innerHTML=`<span style="color:${wi.tc}">${wi.desc}</span>`;
+
+  const bars=document.getElementById('barsDiv');
+  bars.innerHTML='';
+  TYPES.forEach(t=>{
+    const ti=TINFO[t];
+    const sc=scores[t];
+    const pct=Math.round(sc/13*100);
+    const row=document.createElement('div');
+    row.className='bar-row';
+    row.innerHTML=`<div class="bar-key" style="color:${ti.tc}">${t}</div>
+      <div class="bar-track"><div class="bar-fill" id="bf${t}" style="width:0%;background:${ti.bar};"></div></div>
+      <div class="bar-val">${sc}개</div>`;
+    bars.appendChild(row);
+    setTimeout(()=>{document.getElementById('bf'+t).style.width=pct+'%';},50);
+  });
+}
+
+function restart(){
+  cur=0; scores={A:0,B:0,C:0,D:0}; busy=false;
+  document.getElementById('resultWrap').style.display='none';
+  document.getElementById('topBar').style.display='block';
+  document.getElementById('cardStage').style.display='block';
+  document.getElementById('hintText').style.display='block';
+  renderCard();
+}
+
+renderCard();
+</script>
