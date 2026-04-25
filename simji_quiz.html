@@ -575,14 +575,29 @@ function showResult() {
 function submitFeedback() {
   const fb1 = document.getElementById('fb1').value.trim();
   const fb2 = document.getElementById('fb2').value.trim();
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby5IIwMkrSTNQo3mpIg_FWPfgpRHkT2nLSLBUqM6infCSrJT7VM5d6e7nKHTRLci3omIw/exec';
 
-  // 구글 폼 연동 시 여기에 fetch로 데이터 전송
-  // 현재는 감사 화면으로 이동
-  document.getElementById('resultCard').style.display = 'none';
-  document.getElementById('thankyouCard').classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const btn = document.querySelector('.submit-btn');
+  btn.textContent = '제출 중...';
+  btn.disabled = true;
 
-  console.log('피드백 수신:', { score, fb1, fb2 });
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ score, fb1, fb2 })
+  })
+  .then(() => {
+    document.getElementById('resultCard').style.display = 'none';
+    document.getElementById('thankyouCard').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  })
+  .catch(() => {
+    // no-cors 모드에서는 에러 없이 성공 처리
+    document.getElementById('resultCard').style.display = 'none';
+    document.getElementById('thankyouCard').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
 
 buildQuiz();
