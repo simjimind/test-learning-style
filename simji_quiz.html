@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>행동·규범·이상·탐구 유형 퀴즈</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap');
+
+  :root {
+    --cream: #FAF8F3;
+    --parchment: #F3EEE5;
+    --forest: #3D5C3A;
+    --forest-light: #5A7D57;
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --peach: #FDF0EC;
+    --sage: #E6F2EC;
+    --text: #2A2A2A;
+    --text-muted: #6B6B6B;
+    --border: #DDD8CC;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* Header */
+  .header {
+    background: var(--forest);
+    padding: 36px 24px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.15);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 10%;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .header-label {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+  .header p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+  }
+
+  /* Progress */
+  .progress-wrap {
+    background: var(--parchment);
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    min-width: 60px;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--forest), var(--gold));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* Main container */
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* Question card */
+  .question-card {
+    background: #fff;
+    border-radius: 16px;
+    margin-top: 24px;
+    padding: 28px 24px;
+    box-shadow: 0 2px 16px rgba(61,92,58,0.07);
+    border: 1px solid var(--border);
+    display: none;
+    animation: fadeUp 0.4s ease;
+  }
+  .question-card.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-number {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .q-text {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .q-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    font-weight: 300;
+  }
+
+  /* Options */
+  .options {
+    display: grid;
+    gap: 10px;
+  }
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: var(--cream);
+    cursor: pointer;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text);
+    text-align: left;
+    transition: all 0.2s ease;
+    width: 100%;
+  }
+  .option-btn:hover {
+    border-color: var(--forest-light);
+    background: var(--sage);
+  }
+  .option-btn .opt-label {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--parchment);
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option-btn.selected {
+    border-color: var(--forest);
+    background: var(--sage);
+  }
+  .option-btn.selected .opt-label {
+    background: var(--forest);
+    border-color: var(--forest);
+    color: #fff;
+  }
+  .option-btn.correct {
+    border-color: var(--forest);
+    background: var(--sage);
+  }
+  .option-btn.correct .opt-label {
+    background: var(--forest);
+    border-color: var(--forest);
+    color: #fff;
+  }
+  .option-btn.wrong {
+    border-color: #E07070;
+    background: #FDF0F0;
+  }
+  .option-btn.wrong .opt-label {
+    background: #E07070;
+    border-color: #E07070;
+    color: #fff;
+  }
+  .option-btn:disabled { cursor: default; }
+
+  /* Feedback after answer */
+  .answer-feedback {
+    display: none;
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .answer-feedback.show { display: block; animation: fadeUp 0.3s ease; }
+  .answer-feedback.ok {
+    background: var(--sage);
+    border-left: 3px solid var(--forest);
+    color: var(--forest);
+  }
+  .answer-feedback.ng {
+    background: #FDF0F0;
+    border-left: 3px solid #E07070;
+    color: #C05050;
+  }
+
+  /* Next button */
+  .next-btn {
+    display: none;
+    margin-top: 18px;
+    width: 100%;
+    padding: 14px;
+    background: var(--forest);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .next-btn:hover { background: var(--forest-light); }
+  .next-btn.show { display: block; }
+
+  /* Result card */
+  .result-card {
+    background: #fff;
+    border-radius: 16px;
+    margin-top: 24px;
+    padding: 32px 24px;
+    box-shadow: 0 2px 16px rgba(61,92,58,0.07);
+    border: 1px solid var(--border);
+    display: none;
+    text-align: center;
+  }
+  .result-card.active { display: block; animation: fadeUp 0.5s ease; }
+
+  .result-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+  .result-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--forest);
+    margin-bottom: 8px;
+  }
+  .score-display {
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--gold);
+    font-family: 'Noto Serif KR', serif;
+    margin: 16px 0 4px;
+  }
+  .score-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .result-msg {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-muted);
+    background: var(--parchment);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+
+  /* Feedback section */
+  .feedback-section {
+    text-align: left;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+  .feedback-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .feedback-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    font-weight: 300;
+  }
+  .feedback-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    margin-top: 14px;
+  }
+  .feedback-input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--cream);
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .feedback-input:focus { border-color: var(--forest-light); }
+
+  .submit-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--forest), var(--forest-light));
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    letter-spacing: 0.5px;
+  }
+  .submit-btn:hover { opacity: 0.9; }
+
+  /* Thank you */
+  .thankyou-card {
+    background: var(--forest);
+    border-radius: 16px;
+    margin-top: 24px;
+    padding: 40px 24px;
+    text-align: center;
+    display: none;
+    animation: fadeUp 0.5s ease;
+  }
+  .thankyou-card.active { display: block; }
+  .thankyou-card .ty-icon { font-size: 44px; margin-bottom: 16px; }
+  .thankyou-card h2 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .thankyou-card p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+  .gold-text { color: var(--gold-light); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">심리상담연구소 심지</div>
+  <h1>행동·규범·이상·탐구<br>유형 확인 퀴즈</h1>
+  <p>수업 후 이해도를 확인해봐요 · 총 10문항</p>
+</div>
+
+<div class="progress-wrap">
+  <span class="progress-text" id="progressText">0 / 10</span>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Questions -->
+  <div id="quizArea"></div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-icon" id="resultIcon">🌿</div>
+    <div class="result-title" id="resultTitle"></div>
+    <div class="score-display" id="scoreDisplay"></div>
+    <div class="score-sub">10문항 중 정답</div>
+    <div class="result-msg" id="resultMsg"></div>
+
+    <div class="feedback-section">
+      <div class="feedback-title">오늘 수업 피드백</div>
+      <div class="feedback-sub">소중한 이야기를 남겨주세요 🌱</div>
+
+      <div class="feedback-label">오늘 수업에서 가장 기억에 남는 것은?</div>
+      <textarea class="feedback-input" id="fb1" placeholder="자유롭게 적어주세요..."></textarea>
+
+      <div class="feedback-label">궁금한 점이나 질문이 있으시면 남겨주세요</div>
+      <textarea class="feedback-input" id="fb2" placeholder="어떤 질문도 환영해요 :)"></textarea>
+
+      <button class="submit-btn" onclick="submitFeedback()">피드백 제출하기 ✓</button>
+    </div>
+  </div>
+
+  <!-- Thank you -->
+  <div class="thankyou-card" id="thankyouCard">
+    <div class="ty-icon">🦋</div>
+    <h2>감사합니다!</h2>
+    <p>소중한 피드백을 남겨주셨어요.<br><br>
+    <span class="gold-text">오늘 수업에서 발견한 것들이<br>일상 속 작은 용기가 되길 바랍니다. 🌿</span></p>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  { q: "주목받는 순간 '해야지' 마음먹는 사람", answer: "행동형", hint: "주변 환경에 즉각 반응하는 특성과 관련 있어요" },
+  { q: "즉흥적이고 충동적이며, 자유와 자발성을 중요하게 여기는 사람", answer: "행동형", hint: "계획보다 순간의 흐름을 따르는 유형이에요" },
+  { q: "꼼꼼하고 체계적이며, 정해진 계획이 있을 때 안정감을 느끼는 사람", answer: "규범형", hint: "질서와 규칙을 내면화한 유형을 생각해보세요" },
+  { q: "상처를 몸으로 표현하고, 초등 4학년 이전 좋은 습관 형성이 중요한 유형", answer: "규범형", hint: "신체와 습관의 연결이 강한 유형이에요" },
+  { q: "반복학습을 싫어하고 핵심과 원리 파악을 좋아하는 사람", answer: "탐구형", hint: "외우기보다 이해하는 것을 선호하는 유형이에요" },
+  { q: "알고 싶은 것이 너무 많고, 흥미로운 사실을 발견하면 몰두하는 사람", answer: "탐구형", hint: "지적 호기심이 넘치는 유형을 떠올려보세요" },
+  { q: "감정이입을 잘하고, 진정한 인간관계를 중시하는 사람", answer: "이상형", hint: "관계와 정서적 연결을 중요하게 여기는 유형이에요" },
+  { q: "역할놀이·연극·소설을 통한 학습을 좋아하고, 이사·전학을 특히 힘들어하는 유형", answer: "이상형", hint: "안정된 관계 속에서 성장하는 유형이에요" },
+  { q: "목표를 인식하고 나면 기어이 해내고 마는 사람, 리더십 경험을 통해 성장하는 유형", answer: "행동형", hint: "도전과 성취에서 에너지를 얻는 유형이에요" },
+  { q: "논쟁적·비판적이며, 대인관계보다 과제와 원리에 집중하는 사람", answer: "탐구형", hint: "사람보다 아이디어에 더 관심이 많은 유형이에요" },
+];
+
+const types = ["행동형", "규범형", "탐구형", "이상형"];
+let current = 0;
+let score = 0;
+let answered = false;
+
+function buildQuiz() {
+  const area = document.getElementById('quizArea');
+  questions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'question-card' + (i === 0 ? ' active' : '');
+    card.id = 'q' + i;
+
+    const shuffled = [...types].sort(() => Math.random() - 0.5);
+
+    card.innerHTML = `
+      <div class="q-number">Q${i+1} · 10</div>
+      <div class="q-text">"${q.q}"</div>
+      <div class="q-hint">💡 힌트: ${q.hint}</div>
+      <div class="options">
+        ${shuffled.map((t, idx) => `
+          <button class="option-btn" onclick="selectAnswer(${i}, '${t}', this)" id="opt-${i}-${idx}">
+            <span class="opt-label">${['①','②','③','④'][idx]}</span>
+            <span>${t}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="answer-feedback" id="fb-${i}"></div>
+      <button class="next-btn" id="next-${i}" onclick="nextQuestion(${i})">
+        ${i < questions.length - 1 ? '다음 문제 →' : '결과 확인하기 →'}
+      </button>
+    `;
+    area.appendChild(card);
+  });
+}
+
+function selectAnswer(qIdx, selected, btn) {
+  if (answered) return;
+  answered = true;
+
+  const correct = questions[qIdx].answer;
+  const allBtns = document.querySelectorAll(`#q${qIdx} .option-btn`);
+  allBtns.forEach(b => {
+    b.disabled = true;
+    const label = b.querySelector('span:last-child').textContent;
+    if (label === correct) b.classList.add('correct');
+  });
+
+  const fb = document.getElementById(`fb-${qIdx}`);
+  if (selected === correct) {
+    score++;
+    btn.classList.add('correct');
+    fb.className = 'answer-feedback show ok';
+    fb.innerHTML = `✅ 정답이에요! <strong>${correct}</strong>의 특징을 잘 기억하셨네요.`;
+  } else {
+    btn.classList.add('wrong');
+    fb.className = 'answer-feedback show ng';
+    fb.innerHTML = `아쉽지만 오답이에요. 정답은 <strong>${correct}</strong>이에요. 다시 한번 떠올려봐요 :)`;
+  }
+
+  document.getElementById(`next-${qIdx}`).classList.add('show');
+  updateProgress(qIdx + 1);
+}
+
+function nextQuestion(qIdx) {
+  document.getElementById('q' + qIdx).classList.remove('active');
+  current++;
+  answered = false;
+
+  if (current < questions.length) {
+    document.getElementById('q' + current).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    showResult();
+  }
+}
+
+function updateProgress(done) {
+  const pct = (done / questions.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = done + ' / ' + questions.length;
+}
+
+function showResult() {
+  document.getElementById('resultCard').classList.add('active');
+  document.getElementById('scoreDisplay').textContent = score + '점';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  let icon, title, msg;
+  if (score >= 9) {
+    icon = '🏆'; title = '탁월한 이해력!';
+    msg = '네 가지 유형의 특성을 정확하게 파악하고 계세요. 오늘 수업의 핵심을 완벽하게 습득하셨습니다. 이 이해가 아이와의 관계에서 빛을 발할 거예요.';
+  } else if (score >= 7) {
+    icon = '🌿'; title = '훌륭한 이해도!';
+    msg = '대부분의 유형 특성을 잘 파악하셨어요. 틀린 문항을 다시 한번 돌아보며 각 유형의 결을 더 깊이 느껴보시길 권해드려요.';
+  } else if (score >= 5) {
+    icon = '🌱'; title = '성장하는 중!';
+    msg = '절반 이상 맞히셨어요. 유형별 특성이 서로 비슷해 보여 헷갈리는 것은 자연스러운 과정이에요. 오늘 수업 자료를 다시 한번 살펴보면 더 명확해질 거예요.';
+  } else {
+    icon = '🌸'; title = '괜찮아요, 함께 배워가요!';
+    msg = '새로운 개념을 처음 만날 때는 낯선 게 당연해요. 오늘의 시도 자체가 소중합니다. 수업 자료와 함께 유형 특성을 천천히 익혀나가봐요.';
+  }
+
+  document.getElementById('resultIcon').textContent = icon;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultMsg').textContent = msg;
+}
+
+function submitFeedback() {
+  const fb1 = document.getElementById('fb1').value.trim();
+  const fb2 = document.getElementById('fb2').value.trim();
+
+  // 구글 폼 연동 시 여기에 fetch로 데이터 전송
+  // 현재는 감사 화면으로 이동
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('thankyouCard').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  console.log('피드백 수신:', { score, fb1, fb2 });
+}
+
+buildQuiz();
+updateProgress(0);
+</script>
+</body>
+</html>
