@@ -1,7 +1,13 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>나만의 유형 test</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-.scene{min-height:560px;background:linear-gradient(135deg,#fde8f0 0%,#e8f0fd 45%,#e8fdf0 100%);border-radius:20px;font-family:var(--font-sans);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem 2.5rem;position:relative;overflow:hidden;}
+html,body{height:100%;background:linear-gradient(135deg,#fde8f0 0%,#e8f0fd 45%,#e8fdf0 100%);}
+.scene{min-height:100dvh;font-family:var(--font-sans,-apple-system,sans-serif);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.2rem;position:relative;overflow:hidden;}
 .scene::before{content:'';position:absolute;top:-70px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,200,230,0.22);}
 .scene::after{content:'';position:absolute;bottom:-50px;left:-50px;width:180px;height:180px;border-radius:50%;background:rgba(200,215,255,0.22);}
 .page{width:100%;max-width:480px;display:none;flex-direction:column;align-items:center;z-index:2;animation:fadeUp 0.7s ease forwards;}
@@ -33,7 +39,7 @@
 @keyframes pulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
 .countdown{font-size:13px;color:#c0b0d8;margin-bottom:1.3rem;}
 .countdown span{font-weight:500;color:#9080c0;}
-.next-btn{width:100%;max-width:340px;padding:14px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0c8e0,#c8d0f8);color:#5040a0;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:opacity 0.15s,transform 0.15s;box-shadow:0 4px 16px rgba(180,160,230,0.2);}
+.next-btn{width:100%;max-width:340px;padding:14px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0c8e0,#c8d0f8);color:#5040a0;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:opacity 0.15s,transform 0.15s;box-shadow:0 4px 16px rgba(180,160,230,0.2);}
 .next-btn:hover{opacity:0.88;transform:translateY(-1px);}.next-btn:active{transform:scale(0.98);}.next-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
 .page-dots{display:flex;gap:6px;margin-top:1.2rem;}
 .dot{width:6px;height:6px;border-radius:50%;background:rgba(180,160,220,0.3);transition:all 0.3s;}.dot.on{background:rgba(160,140,210,0.7);width:18px;border-radius:3px;}
@@ -51,7 +57,7 @@
 .card-num{font-size:12px;font-weight:600;letter-spacing:0.1em;color:#c0a0d0;margin-bottom:1rem;}
 .card-text{font-size:17px;font-weight:500;color:#4a3d60;line-height:1.65;margin-bottom:2rem;word-break:keep-all;}
 .btn-row{display:flex;gap:16px;}
-.ans-btn{width:100px;height:52px;border-radius:16px;border:2px solid transparent;font-size:22px;cursor:pointer;transition:all 0.18s ease;display:flex;align-items:center;justify-content:center;font-family:var(--font-sans);}
+.ans-btn{width:100px;height:52px;border-radius:16px;border:2px solid transparent;font-size:22px;cursor:pointer;transition:all 0.18s ease;display:flex;align-items:center;justify-content:center;font-family:inherit;}
 .btn-o{background:linear-gradient(135deg,#ffe0ec,#ffd0e8);border-color:#f0a0c0;color:#d05090;}.btn-o:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(240,160,192,0.4);}
 .btn-x{background:linear-gradient(135deg,#e0e8ff,#d0dcff);border-color:#a0b0f0;color:#5070d0;}.btn-x:hover{transform:scale(1.08);box-shadow:0 6px 20px rgba(160,176,240,0.4);}
 .ghost-cards{position:absolute;inset:0;pointer-events:none;}
@@ -65,9 +71,10 @@
 .bar-row{display:grid;grid-template-columns:34px 1fr 36px;align-items:center;gap:10px;}
 .bar-icon{width:30px;height:30px;object-fit:contain;}
 .bar-track{height:10px;background:rgba(180,160,210,0.2);border-radius:8px;overflow:hidden;}.bar-fill{height:100%;border-radius:8px;transition:width 0.8s cubic-bezier(.4,0,.2,1);}.bar-val{font-size:13px;color:#8a7fa0;text-align:right;}
-.restart-btn{width:100%;padding:13px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0d0e8,#d0dcf8);color:#6050a0;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font-sans);transition:opacity 0.15s;}.restart-btn:hover{opacity:0.85;}
+.restart-btn{width:100%;padding:13px;border-radius:16px;border:none;background:linear-gradient(135deg,#f0d0e8,#d0dcf8);color:#6050a0;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;transition:opacity 0.15s;}.restart-btn:hover{opacity:0.85;}
 </style>
-
+</head>
+<body>
 <div class="scene">
   <div class="page active" id="page1">
     <div class="p1-icons">
@@ -85,24 +92,12 @@
 
   <div class="page" id="page2">
     <img class="p2-top-icon" src="https://simjimind.github.io/test-learning-style/image/005.png" alt="안내 아이콘">
-    <div class="p2-heading">검사를 시작하기 전에</div>
+    <div class="p2-heading">시작하기 전에</div>
     <div class="guide-cards">
-      <div class="g-card">
-        <div class="g-num">1</div>
-        <div class="g-text">인간은 모두 내면에 <strong>독특한 소우주</strong>를 품고 있습니다. 그 안에 다양한 에너지들이 숨쉬고 있죠. 그중 내가 좋아하고 선호하는 에너지를 찾아보고자 합니다.</div>
-      </div>
-      <div class="g-card">
-        <div class="g-num">2</div>
-        <div class="g-text">응답할 때는 <strong>초등학교 1학년 시절의 나</strong>를 떠올려 보세요. 눈치 보지 않고, 하고 싶은 것을 그냥 하던 그 편하고 자유로웠던 모습이요.</div>
-      </div>
-      <div class="g-card">
-        <div class="g-num">3</div>
-        <div class="g-text"><strong>정답은 없어요.</strong> '내가 되고 싶은 모습'이 아닌, 지금 내가 편하고 좋아하는 것에 솔직하게 답해 주세요.<br>총 <strong>52개 문항</strong>이 나옵니다. 여유있는 시간에 편안한 곳에서 부담없이 응답해보세요.</div>
-      </div>
-      <div class="g-card">
-        <div class="g-num">4</div>
-        <div class="g-text">이 시간은 <strong>나만의 고유한 리듬</strong>을 발견하기 위한 거예요. 좋고 나쁨이 없는, 본연의 나를 찾아가는 여정입니다.</div>
-      </div>
+      <div class="g-card"><div class="g-num">1</div><div class="g-text">인간은 모두 내면에 <strong>독특한 소우주</strong>를 품고 있습니다. 그 안에 다양한 에너지들이 숨쉬고 있죠. 그중 내가 좋아하고 선호하는 에너지를 찾아보고자 합니다.</div></div>
+      <div class="g-card"><div class="g-num">2</div><div class="g-text">응답할 때는 <strong>초등학교 1학년 시절의 나</strong>를 떠올려 보세요. 눈치 보지 않고, 하고 싶은 것을 그냥 하던 그 편하고 자유로웠던 모습이요.</div></div>
+      <div class="g-card"><div class="g-num">3</div><div class="g-text"><strong>정답은 없어요.</strong> '내가 되고 싶은 모습'이 아닌, 지금 내가 편하고 좋아하는 것에 솔직하게 답해 주세요.<br>총 <strong>52개 문항</strong>이 나옵니다.</div></div>
+      <div class="g-card"><div class="g-num">4</div><div class="g-text">이 시간은 <strong>나만의 고유한 리듬</strong>을 발견하기 위한 거예요. 좋고 나쁨이 없는, 본연의 나를 찾아가는 여정입니다.</div></div>
     </div>
     <button class="next-btn" onclick="goPage(3)">숨 고르고 시작하기 →</button>
     <div class="page-dots"><div class="dot"></div><div class="dot on"></div><div class="dot"></div></div>
@@ -251,3 +246,5 @@ function fullRestart(){
   clearInterval(cdTimer);clearTimeout(breathTimer);
 }
 </script>
+</body>
+</html>
